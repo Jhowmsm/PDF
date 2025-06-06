@@ -66,8 +66,21 @@
           respuestaDiv.textContent = 'El archivo es demasiado grande. Límite: 50 MB.';
           return;
         }
-        const data = await res.json();
-        respuestaDiv.textContent = data.mensaje || data.error;
+        if (res.ok) {
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'balance.xlsx';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+          respuestaDiv.textContent = '¡Excel generado y descargado!';
+        } else {
+          const data = await res.json();
+          respuestaDiv.textContent = data.mensaje || data.error;
+        }
       } catch (err) {
         respuestaDiv.textContent = 'Error al procesar el archivo.';
       }
