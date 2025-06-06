@@ -39,10 +39,10 @@ app.post('/procesar-balance', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    ws[conf.cells[0]] = { v: value[0] };
-                    ws[conf.cells[1]] = { v: value[1] };
+                    ws[conf.cells[0]] = { v: value[0] || "N/A" };
+                    ws[conf.cells[1]] = { v: value[1] || "N/A" };
                 } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
-                    ws[conf.cells[0]] = { v: value };
+                    ws[conf.cells[0]] = { v: value || "N/A" };
                 }
             }
 
