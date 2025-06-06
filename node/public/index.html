@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Extractor de PDFs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>Extractor de Documentos PDF</h1>
+  <div class="container">
+    <div class="titulo">
+      <div class="drop-zone" id="box1">
+        <label for="input1" class="custom-file-label">Elegir archivo PDF</label>
+        <input type="file" accept=".pdf" id="input1" hidden />
+        <span id="fileName1" class="file-name"></span>
+        <div class="buttons">
+          <button class="reset-btn" id="reset1" hidden>Resetear</button>
+          <button class="procesar-btn" id="procesar1" hidden>Procesar</button>
+        </div>
+      </div>
+      <p>Cuentas Anuales / Annual Accounts</p>
+    </div>
+    <!-- Puedes copiar la estructura para los demás documentos aquí si deseas -->
+  </div>
+  <div id="respuesta" class="respuesta"></div>
+
+  <script>
+    const input1 = document.getElementById('input1');
+    const fileNameSpan1 = document.getElementById('fileName1');
+    const resetBtn1 = document.getElementById('reset1');
+    const procesarBtn1 = document.getElementById('procesar1');
+    const respuestaDiv = document.getElementById('respuesta');
+
+    input1.addEventListener('change', (e) => {
+      if (e.target.files.length) {
+        fileNameSpan1.textContent = e.target.files[0].name + " - Archivo cargado correctamente";
+        resetBtn1.hidden = false;
+        procesarBtn1.hidden = false;
+      } else {
+        fileNameSpan1.textContent = "";
+        resetBtn1.hidden = true;
+        procesarBtn1.hidden = true;
+      }
+    });
+
+    resetBtn1.addEventListener('click', () => {
+      input1.value = '';
+      fileNameSpan1.textContent = '';
+      resetBtn1.hidden = true;
+      procesarBtn1.hidden = true;
+      respuestaDiv.textContent = '';
+    });
+
+    procesarBtn1.addEventListener('click', async () => {
+      if (!input1.files.length) return;
+      respuestaDiv.textContent = 'Procesando...';
+      const formData = new FormData();
+      formData.append('pdf', input1.files[0]);
+      try {
+        const res = await fetch('/procesar-balance', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        respuestaDiv.textContent = data.mensaje || data.error;
+      } catch (err) {
+        respuestaDiv.textContent = 'Error al procesar el archivo.';
+      }
+    });
+  </script>
+</body>
+</html>
