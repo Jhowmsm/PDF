@@ -39,7 +39,6 @@ app.post('/procesar-balance', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    // Asigna cada número a la celda correspondiente
                     ws[conf.cells[0]] = { v: value[0] };
                     ws[conf.cells[1]] = { v: value[1] };
                 } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
@@ -47,12 +46,21 @@ app.post('/procesar-balance', upload.single('pdf'), (req, res) => {
                 }
             }
 
-            // Calcula el rango de la hoja
+            // Calcular el rango real de la hoja
             const cellAddresses = Object.keys(ws);
-            const range = cellAddresses.length
-                ? { s: XLSX.utils.decode_cell(cellAddresses[0]), e: XLSX.utils.decode_cell(cellAddresses[cellAddresses.length - 1]) }
-                : { s: { c: 0, r: 0 }, e: { c: 0, r: 0 } };
-            ws['!ref'] = XLSX.utils.encode_range(range);
+            if (cellAddresses.length) {
+                let minCol = Infinity, minRow = Infinity, maxCol = -Infinity, maxRow = -Infinity;
+                cellAddresses.forEach(addr => {
+                    const { c, r } = XLSX.utils.decode_cell(addr);
+                    if (c < minCol) minCol = c;
+                    if (r < minRow) minRow = r;
+                    if (c > maxCol) maxCol = c;
+                    if (r > maxRow) maxRow = r;
+                });
+                ws['!ref'] = XLSX.utils.encode_range({ s: { c: minCol, r: minRow }, e: { c: maxCol, r: maxRow } });
+            } else {
+                ws['!ref'] = 'A1:A1';
+            }
 
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Balance");
