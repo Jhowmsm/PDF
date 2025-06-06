@@ -7,7 +7,10 @@ const fs = require('fs');
 
 const app = express();
 const PORT = 3000;
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ 
+    dest: 'uploads/',
+    limits: { fileSize: 50 * 1024 * 1024 } // 10 MB
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 
