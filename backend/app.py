@@ -4,6 +4,8 @@ import json
 import re
 from pathlib import Path
 from PyPDF2 import PdfReader
+from openpyxl import Workbook
+from datetime import datetime
 
 def load_config(config_path):
     with open(config_path, 'r', encoding='utf-8') as f:
@@ -38,6 +40,27 @@ def extract_data(text, config):
             results[key] = match.group(1).strip() if match else ""
     return results
 
+def save_to_excel(data, output_path):
+    wb = Workbook()
+    ws = wb.active
+
+    # --- VALORES ESTÁTICOS ---
+    ws['A1'] = "Reporte generado"
+    ws['B1'] = "HOLA"
+    ws['C1'] = "Mi Empresa S.A."
+
+    # --- Tus datos dinámicos ---
+    row = 3  # Empieza en la fila 3 para dejar espacio a los valores estáticos
+    for key, value in data.items():
+        ws.cell(row=row, column=1, value=key)
+        if isinstance(value, list):
+            ws.cell(row=row, column=2, value=" - ".join(value))
+        else:
+            ws.cell(row=row, column=2, value=value)
+        row += 1
+
+    wb.save(output_path)
+
 def main():
     if len(sys.argv) < 4:
         print(json.dumps({'error': 'Faltan argumentos: pdf_path config_path output_path'}))
@@ -46,15 +69,16 @@ def main():
     file_path = sys.argv[1]
     config_path = sys.argv[2]
     output_path = sys.argv[3]
+
     try:
         reader = PdfReader(file_path)
         full_text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
         config = load_config(config_path)
         extracted = extract_data(full_text, config)
-        with open(output_path, 'w', encoding='utf-8') as f:
-            json.dump(extracted, f, ensure_ascii=False)
+        save_to_excel(extracted, output_path)
     except Exception as e:
-        with open(output_path, 'w', encoding='utf-8') as f:
+        error_path = output_path.replace('.xlsx', '.error.json')
+        with open(error_path, 'w', encoding='utf-8') as f:
             json.dump({'error': str(e)}, f, ensure_ascii=False)
 
 if __name__ == '__main__':

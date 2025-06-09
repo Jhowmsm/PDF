@@ -1,0 +1,16 @@
+{
+  "keywords": {
+    "Capital social": {
+      "mode": "two_numbers_after",
+      "cells": ["B2", "C2"]
+    },
+    "Reservas": {
+      "mode": "two_numbers_after",
+      "cells": ["B3", "C3"]
+    },
+    "Dividendos": {
+      "mode": "two_numbers_after",
+      "cells": ["B4", "C4"]
+    }
+  }
+}

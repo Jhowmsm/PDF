@@ -1,0 +1,16 @@
+{
+  "keywords": {
+    "Ingresos netos": {
+      "mode": "two_numbers_after",
+      "cells": ["E2", "F2"]
+    },
+    "Costos operativos": {
+      "mode": "two_numbers_after",
+      "cells": ["E3", "F3"]
+    },
+    "Ganancia bruta": {
+      "mode": "two_numbers_after",
+      "cells": ["E4", "F4"]
+    }
+  }
+}

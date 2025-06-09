@@ -2,13 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Extractor de PDFs</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <h1>Extractor de Documentos PDF</h1>
   <div class="container">
+
+    <!-- Caja 1 -->
     <div class="titulo">
       <div class="drop-zone" id="box1">
         <label for="input1" class="custom-file-label">Elegir archivo PDF</label>
@@ -16,73 +18,162 @@
         <span id="fileName1" class="file-name"></span>
         <div class="buttons">
           <button class="reset-btn" id="reset1" hidden>Resetear</button>
-          <button class="procesar-btn" id="procesar1" hidden>Procesar</button>
         </div>
       </div>
       <p>Cuentas Anuales / Annual Accounts</p>
     </div>
-    <!-- Puedes copiar la estructura para los demás documentos aquí si deseas -->
+
+    <!-- Caja 2 -->
+    <div class="titulo">
+      <div class="drop-zone" id="box2">
+        <label for="input2" class="custom-file-label">Elegir archivo PDF</label>
+        <input type="file" accept=".pdf" id="input2" hidden />
+        <span id="fileName2" class="file-name"></span>
+        <div class="buttons">
+          <button class="reset-btn" id="reset2" hidden>Resetear</button>
+        </div>
+      </div>
+      <p>Documento 2</p>
+    </div>
+
+    <!-- Caja 3 -->
+    <div class="titulo">
+      <div class="drop-zone" id="box3">
+        <label for="input3" class="custom-file-label">Elegir archivo PDF</label>
+        <input type="file" accept=".pdf" id="input3" hidden />
+        <span id="fileName3" class="file-name"></span>
+        <div class="buttons">
+          <button class="reset-btn" id="reset3" hidden>Resetear</button>
+        </div>
+      </div>
+      <p>Documento 3</p>
+    </div>
+
+    <!-- Caja 4 -->
+    <div class="titulo">
+      <div class="drop-zone" id="box4">
+        <label for="input4" class="custom-file-label">Elegir archivo PDF</label>
+        <input type="file" accept=".pdf" id="input4" hidden />
+        <span id="fileName4" class="file-name"></span>
+        <div class="buttons">
+          <button class="reset-btn" id="reset4" hidden>Resetear</button>
+        </div>
+      </div>
+      <p>Documento 4</p>
+    </div>
+
+    <!-- Caja 5 -->
+    <div class="titulo">
+      <div class="drop-zone" id="box5">
+        <label for="input5" class="custom-file-label">Elegir archivo PDF</label>
+        <input type="file" accept=".pdf" id="input5" hidden />
+        <span id="fileName5" class="file-name"></span>
+        <div class="buttons">
+          <button class="reset-btn" id="reset5" hidden>Resetear</button>
+        </div>
+      </div>
+      <p>Documento 5</p>
+    </div>
+
   </div>
+
+  <!-- Botón procesar general -->
+  <div class="procesar-todos" style="text-align:center;">
+    <button id="procesarTodos">Procesar Todos</button>
+  </div>
+
   <div id="respuesta" class="respuesta"></div>
 
   <script>
-    const input1 = document.getElementById('input1');
-    const fileNameSpan1 = document.getElementById('fileName1');
-    const resetBtn1 = document.getElementById('reset1');
-    const procesarBtn1 = document.getElementById('procesar1');
     const respuestaDiv = document.getElementById('respuesta');
 
-    input1.addEventListener('change', (e) => {
-      if (e.target.files.length) {
-        fileNameSpan1.textContent = e.target.files[0].name + " - Archivo cargado correctamente";
-        resetBtn1.hidden = false;
-        procesarBtn1.hidden = false;
-      } else {
-        fileNameSpan1.textContent = "";
-        resetBtn1.hidden = true;
-        procesarBtn1.hidden = true;
-      }
-    });
+    function configurarCaja(num) {
+      const input = document.getElementById('input' + num);
+      const fileNameSpan = document.getElementById('fileName' + num);
+      const resetBtn = document.getElementById('reset' + num);
+      const dropZone = document.getElementById('box' + num);
 
-    resetBtn1.addEventListener('click', () => {
-      input1.value = '';
-      fileNameSpan1.textContent = '';
-      resetBtn1.hidden = true;
-      procesarBtn1.hidden = true;
-      respuestaDiv.textContent = '';
-    });
-
-    procesarBtn1.addEventListener('click', async () => {
-      if (!input1.files.length) return;
-      respuestaDiv.textContent = 'Procesando...';
-      const formData = new FormData();
-      formData.append('pdf', input1.files[0]);
-      try {
-        const res = await fetch('/procesar-balance', {
-          method: 'POST',
-          body: formData
+      // Quitar listener del dropZone para click
+      // Solo abrimos input al hacer click en el label
+      const label = dropZone.querySelector('label');
+      if (label) {
+        label.addEventListener('click', (e) => {
+          e.preventDefault();
+          input.click();
         });
-        if (res.status === 413) {
-          respuestaDiv.textContent = 'El archivo es demasiado grande. Límite: 50 MB.';
-          return;
-        }
-        if (res.ok) {
-          const blob = await res.blob();
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = 'balance.xlsx';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          window.URL.revokeObjectURL(url);
-          respuestaDiv.textContent = '¡Excel generado y descargado!';
+      }
+
+      input.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+          fileNameSpan.textContent = e.target.files[0].name + " - Archivo cargado correctamente";
+          resetBtn.hidden = false;
         } else {
-          const data = await res.json();
-          respuestaDiv.textContent = data.mensaje || data.error;
+          fileNameSpan.textContent = "";
+          resetBtn.hidden = true;
         }
-      } catch (err) {
-        respuestaDiv.textContent = 'Error al procesar el archivo.';
+      });
+
+      resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // evitar disparar click del drop-zone
+        input.value = '';
+        fileNameSpan.textContent = '';
+        resetBtn.hidden = true;
+        respuestaDiv.textContent = '';
+      });
+    }
+
+    for (let i = 1; i <= 5; i++) {
+      configurarCaja(i);
+    }
+
+    document.getElementById('procesarTodos').addEventListener('click', async () => {
+      const endpoints = [
+        '/procesar-balance', // Caja 1
+        '/procesar-bsc',     // Caja 2
+        '/procesar-doc3',    // Caja 3
+        '/procesar-doc4',    // Caja 4
+        '/procesar-doc5'     // Caja 5
+      ];
+      let algunoProcesado = false;
+      respuestaDiv.textContent = '';
+      for (let i = 1; i <= 5; i++) {
+        const input = document.getElementById('input' + i);
+        if (input.files.length) {
+          algunoProcesado = true;
+          respuestaDiv.textContent += `Procesando documento ${i}...\n`;
+          const formData = new FormData();
+          formData.append('pdf', input.files[0]);
+          try {
+            const res = await fetch(endpoints[i - 1], {
+              method: 'POST',
+              body: formData
+            });
+            if (res.status === 413) {
+              respuestaDiv.textContent += `El archivo de la caja ${i} es demasiado grande. Límite: 50 MB.\n`;
+              continue;
+            }
+            if (res.ok) {
+              const blob = await res.blob();
+              const url = window.URL.createObjectURL(blob);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = `documento${i}.xlsx`;
+              document.body.appendChild(a);
+              a.click();
+              a.remove();
+              window.URL.revokeObjectURL(url);
+              respuestaDiv.textContent += `¡Documento ${i} generado y descargado!\n`;
+            } else {
+              const data = await res.json();
+              respuestaDiv.textContent += `Error en documento ${i}: ${data.mensaje || data.error}\n`;
+            }
+          } catch (err) {
+            respuestaDiv.textContent += `Error al procesar el archivo de la caja ${i}.\n`;
+          }
+        }
+      }
+      if (!algunoProcesado) {
+        respuestaDiv.textContent = 'Por favor, selecciona al menos un archivo.';
       }
     });
   </script>

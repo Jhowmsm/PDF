@@ -1,0 +1,16 @@
+{
+  "keywords": {
+    "Ventas totales": {
+      "mode": "two_numbers_after",
+      "cells": ["B2", "C2"]
+    },
+    "Gastos administrativos": {
+      "mode": "two_numbers_after",
+      "cells": ["B3", "C3"]
+    },
+    "Utilidad neta": {
+      "mode": "two_numbers_after",
+      "cells": ["B4", "C4"]
+    }
+  }
+}

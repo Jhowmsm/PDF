@@ -26,7 +26,7 @@ h1 {
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 280px;
+  width: 180px;
   transition: transform 0.2s ease-in-out;
 }
 
@@ -57,6 +57,13 @@ h1 {
   margin-top: 0.5rem;
   font-size: 0.9rem;
   color: #2c3e50;
+  max-width: 160px;         /* Limita el ancho al de la caja */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .buttons {

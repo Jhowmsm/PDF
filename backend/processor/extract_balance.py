@@ -18,23 +18,44 @@ def extract_data(text, config):
     results = {}
     for key, spec in config['keywords'].items():
         mode = spec['mode']
-        if mode == 'two_numbers_after':
-            match = re.search(re.escape(key) + r'[^0-9\-]+([\(]?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})[\)]?)\D+([\(]?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})[\)]?)', text)
-            if match:
-                results[key] = [clean_number(match.group(1)), clean_number(match.group(2))]
-            else:
+        variants = spec.get('variants', [key])  # Usa 'key' si no hay variants
+        found = False
+        for variant in variants:
+            if mode == 'two_numbers_after':
+                match = re.search(
+                    re.escape(variant) + r'[^0-9\-]+([\(]?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})[\)]?)\D+([\(]?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})[\)]?)',
+                    text
+                )
+                if match:
+                    results[key] = [clean_number(match.group(1)), clean_number(match.group(2))]
+                    found = True
+                    break
+            elif mode == 'until_dot':
+                match = re.search(re.escape(variant) + r'(.+?)\.', text)
+                if match:
+                    results[key] = match.group(1).strip()
+                    found = True
+                    break
+            elif mode == 'until_newline':
+                match = re.search(re.escape(variant) + r'([^\n\r]+)', text)
+                if match:
+                    results[key] = match.group(1).strip()
+                    found = True
+                    break
+            elif mode == 'between_phrases':
+                start = spec.get('start_phrase', variant)
+                end = spec.get('end_phrase', '')
+                match = re.search(re.escape(start) + r'(.*?)' + re.escape(end), text, re.DOTALL)
+                if match:
+                    results[key] = match.group(1).strip()
+                    found = True
+                    break
+        # Si no encontró nada, pon vacío o lista vacía según el modo
+        if not found:
+            if mode == 'two_numbers_after':
                 results[key] = ["", ""]
-        elif mode == 'until_dot':
-            match = re.search(re.escape(key) + r'(.+?)\.', text)
-            results[key] = match.group(1).strip() if match else ""
-        elif mode == 'until_newline':
-            match = re.search(re.escape(key) + r'([^\n\r]+)', text)
-            results[key] = match.group(1).strip() if match else ""
-        elif mode == 'between_phrases':
-            start = spec['start_phrase']
-            end = spec['end_phrase']
-            match = re.search(re.escape(start) + r'(.*?)' + re.escape(end), text, re.DOTALL)
-            results[key] = match.group(1).strip() if match else ""
+            else:
+                results[key] = ""
     return results
 
 def main():

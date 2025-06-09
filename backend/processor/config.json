@@ -38,5 +38,11 @@
       "start_phrase": "Opinión",
       "end_phrase": "Fundamento de la opinión"
     }
+  },
+  "static_values": {
+    "A1": "Reporte generado",
+    "A2": "2025-06-09",
+    "C2": "Mi Empresa S.A."
   }
+
 }
