@@ -36,6 +36,29 @@ def extract_data(text, config):
             end = spec['end_phrase']
             match = re.search(re.escape(start) + r'(.*?)' + re.escape(end), text, re.DOTALL)
             results[key] = match.group(1).strip() if match else ""
+        elif mode == 'sum_percent_until_100':
+            bloque = ""
+            bloque_match = re.search(re.escape(key) + r'(.*)', text, re.DOTALL | re.IGNORECASE)
+            if bloque_match:
+                bloque = bloque_match.group(1)
+            else:
+                bloque = text
+
+            # print("==== BLOQUE EXTRAÍDO PARA 'sum_percent_until_100' ====")
+            # print(bloque[:1000])  # Muestra los primeros 1000 caracteres
+
+            # Regex tolerante a saltos de línea y espacios
+            pattern = r'([A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+)\s*Percentage of turnover\s*:\s*(\d+)%'
+            matches = re.findall(pattern, bloque, re.IGNORECASE)
+            suma = 0
+            resultado = []
+            for pais, porcentaje in matches:
+                porcentaje = int(porcentaje)
+                suma += porcentaje
+                resultado.append({'pais': pais.strip(), 'porcentaje': porcentaje})
+                if suma >= 100:
+                    break
+            results[key] = resultado
     return results
 
 def main():

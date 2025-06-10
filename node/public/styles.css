@@ -26,7 +26,7 @@ h1 {
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 180px;
+  width: 160px;
   transition: transform 0.2s ease-in-out;
 }
 

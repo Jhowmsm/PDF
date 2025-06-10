@@ -5,7 +5,8 @@
       "cells": ["B57", "B64"],
       "mode": "two_numbers_after"
     },
-    "PATRIMONIO": {
+    "Total patrimonio neto": {
+      "variants": ["Total patrimonio neto", "TOTAL PATRIMONIO NETO", "TOTAL ACTIVO"],
       "cells": ["B58", "B65"],
       "mode": "two_numbers_after"
     },
@@ -14,6 +15,7 @@
       "mode": "two_numbers_after"
     },
     "RESULTADO DEL EJERCICIO": {
+      "variants": ["Resultado del ejercicio"],
       "cells": ["B59", "B66"],
       "mode": "two_numbers_after"
     },
@@ -21,7 +23,8 @@
       "cells": ["B63", "B70"],
       "mode": "two_numbers_after"
     },
-    "14.1": {
+    "Importe neto de la cifra de negocios": {
+      "variants": ["Importe neto de la cifra de negocios  Nota 20"],
       "cells": ["B60", "B67"],
       "mode": "two_numbers_after"
     },
@@ -49,14 +52,18 @@
     "A59": "Resultado del Ejercicio año de referencia",
     "A60": "Importe neto de la cifra de negocios año de referencia",
     "A61": "Ventas(Sales) año de referencia",
+    "B61": "N/A",
     "A62": "Ventas (Revenue) año de referencia",
+    "B62": "N/A",
     "A63": "Fondos Propios año de referencia",
     "A64": "Total Activo año anterior",
     "A65": "Patrimonio neto año anterior",
     "A66": "Resultado del Ejercicio año anterior",
     "A67": "Importe neto de la cifra de negocios año anterior",
     "A68": "Ventas(Sales) año anterior",
+    "B68": "N/A",
     "A69": "Ventas (Revenue) año anterior",
+    "B69": "N/A",
     "A70": "Fondos Propios año anterior"
   }
 

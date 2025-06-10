@@ -1,21 +1,21 @@
 {
   "keywords": {
-    "Resultado operativo": {
-      "mode": "two_numbers_after",
-      "cells": ["B2", "C2"]
+    "Your countries of business":{
+      "variants": ["Sus países de actividad"],
+      "mode": "sum_percent_until_100",
+      "cells": ["B79"]
     },
-    "Ingresos financieros": {
-      "mode": "two_numbers_after",
-      "cells": ["B3", "C3"]
-    },
-    "Resultado antes de impuestos": {
-      "mode": "two_numbers_after",
-      "cells": ["B4", "C4"]
-    },
-    "Capital social": {
-      "variants": ["Capital social", "Cap. social", "Capital soc."],
-      "mode": "two_numbers_after",
-      "cells": ["B2", "C2"]
+    "Información clave entre frases": {
+      "cells": ["B80"],
+      "mode": "between_phrases",
+      "start_phrase": "Your business sectors",
+      "end_phrase": "Percentage"
     }
+
+  },
+  "static_values": {
+    "A78": "Actividad geográfica - BSC",
+    "A79": "Distribucion en Ventas - BSC",
+    "A80": "Sector de Actividad - BSC"
   }
 }

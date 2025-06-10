@@ -47,10 +47,18 @@ app.post('/procesar-balance', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    ws[conf.cells[0]] = { v: value[0] && value[0].trim() ? value[0] : "N/A" };
-                    ws[conf.cells[1]] = { v: value[1] && value[1].trim() ? value[1] : "N/A" };
-                } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
-                    ws[conf.cells[0]] = { v: value && value.trim() ? value : "N/A" };
+                    ws[conf.cells[0]] = { v: value[0] && value[0].trim ? value[0] : "N/A" };
+                    ws[conf.cells[1]] = { v: value[1] && value[1].trim ? value[1] : "N/A" };
+                } else if (
+                    conf.mode === 'until_dot' ||
+                    conf.mode === 'until_newline' ||
+                    conf.mode === 'between_phrases'
+                ) {
+                    ws[conf.cells[0]] = { v: value && value.trim ? value : "N/A" };
+                } else if (conf.mode === 'sum_percent_until_100' && Array.isArray(value)) {
+                    // Une los países y porcentajes en una sola celda
+                    const texto = value.map(item => `${item.pais}: ${item.porcentaje}%`).join('\n');
+                    ws[conf.cells[0]] = { v: texto };
                 }
             }
 
@@ -112,10 +120,18 @@ app.post('/procesar-bsc', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    ws[conf.cells[0]] = { v: value[0] && value[0].trim() ? value[0] : "N/A" };
-                    ws[conf.cells[1]] = { v: value[1] && value[1].trim() ? value[1] : "N/A" };
-                } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
-                    ws[conf.cells[0]] = { v: value && value.trim() ? value : "N/A" };
+                    ws[conf.cells[0]] = { v: value[0] && value[0].trim ? value[0] : "N/A" };
+                    ws[conf.cells[1]] = { v: value[1] && value[1].trim ? value[1] : "N/A" };
+                } else if (
+                    conf.mode === 'until_dot' ||
+                    conf.mode === 'until_newline' ||
+                    conf.mode === 'between_phrases'
+                ) {
+                    ws[conf.cells[0]] = { v: value && value.trim ? value : "N/A" };
+                } else if (conf.mode === 'sum_percent_until_100' && Array.isArray(value)) {
+                    // Une los países y porcentajes en una sola celda
+                    const texto = value.map(item => `${item.pais}: ${item.porcentaje}%`).join('\n');
+                    ws[conf.cells[0]] = { v: texto };
                 }
             }
 
@@ -177,10 +193,18 @@ app.post('/procesar-doc3', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    ws[conf.cells[0]] = { v: value[0] && value[0].trim() ? value[0] : "N/A" };
-                    ws[conf.cells[1]] = { v: value[1] && value[1].trim() ? value[1] : "N/A" };
-                } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
-                    ws[conf.cells[0]] = { v: value && value.trim() ? value : "N/A" };
+                    ws[conf.cells[0]] = { v: value[0] && value[0].trim ? value[0] : "N/A" };
+                    ws[conf.cells[1]] = { v: value[1] && value[1].trim ? value[1] : "N/A" };
+                } else if (
+                    conf.mode === 'until_dot' ||
+                    conf.mode === 'until_newline' ||
+                    conf.mode === 'between_phrases'
+                ) {
+                    ws[conf.cells[0]] = { v: value && value.trim ? value : "N/A" };
+                } else if (conf.mode === 'sum_percent_until_100' && Array.isArray(value)) {
+                    // Une los países y porcentajes en una sola celda
+                    const texto = value.map(item => `${item.pais}: ${item.porcentaje}%`).join('\n');
+                    ws[conf.cells[0]] = { v: texto };
                 }
             }
 
@@ -242,10 +266,18 @@ app.post('/procesar-doc4', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    ws[conf.cells[0]] = { v: value[0] && value[0].trim() ? value[0] : "N/A" };
-                    ws[conf.cells[1]] = { v: value[1] && value[1].trim() ? value[1] : "N/A" };
-                } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
-                    ws[conf.cells[0]] = { v: value && value.trim() ? value : "N/A" };
+                    ws[conf.cells[0]] = { v: value[0] && value[0].trim ? value[0] : "N/A" };
+                    ws[conf.cells[1]] = { v: value[1] && value[1].trim ? value[1] : "N/A" };
+                } else if (
+                    conf.mode === 'until_dot' ||
+                    conf.mode === 'until_newline' ||
+                    conf.mode === 'between_phrases'
+                ) {
+                    ws[conf.cells[0]] = { v: value && value.trim ? value : "N/A" };
+                } else if (conf.mode === 'sum_percent_until_100' && Array.isArray(value)) {
+                    // Une los países y porcentajes en una sola celda
+                    const texto = value.map(item => `${item.pais}: ${item.porcentaje}%`).join('\n');
+                    ws[conf.cells[0]] = { v: texto };
                 }
             }
 
@@ -307,10 +339,18 @@ app.post('/procesar-doc5', upload.single('pdf'), (req, res) => {
                 const conf = config.keywords[key];
                 if (!conf) continue;
                 if (conf.mode === 'two_numbers_after' && Array.isArray(value)) {
-                    ws[conf.cells[0]] = { v: value[0] && value[0].trim() ? value[0] : "N/A" };
-                    ws[conf.cells[1]] = { v: value[1] && value[1].trim() ? value[1] : "N/A" };
-                } else if (conf.mode === 'until_dot' || conf.mode === 'until_newline' || conf.mode === 'between_phrases') {
-                    ws[conf.cells[0]] = { v: value && value.trim() ? value : "N/A" };
+                    ws[conf.cells[0]] = { v: value[0] && value[0].trim ? value[0] : "N/A" };
+                    ws[conf.cells[1]] = { v: value[1] && value[1].trim ? value[1] : "N/A" };
+                } else if (
+                    conf.mode === 'until_dot' ||
+                    conf.mode === 'until_newline' ||
+                    conf.mode === 'between_phrases'
+                ) {
+                    ws[conf.cells[0]] = { v: value && value.trim ? value : "N/A" };
+                } else if (conf.mode === 'sum_percent_until_100' && Array.isArray(value)) {
+                    // Une los países y porcentajes en una sola celda
+                    const texto = value.map(item => `${item.pais}: ${item.porcentaje}%`).join('\n');
+                    ws[conf.cells[0]] = { v: texto };
                 }
             }
 

@@ -37,10 +37,35 @@ def extract_data(text, config):
             start = spec['start_phrase']
             end = spec['end_phrase']
             match = re.search(re.escape(start) + r'(.*?)' + re.escape(end), text, re.DOTALL)
-            results[key] = match.group(1).strip() if match else ""
+            if match:
+                # Elimina saltos de línea y espacios extra
+                value = match.group(1).replace('\n', ' ').replace('\r', ' ').strip()
+                value = re.sub(r'\s+', ' ', value)  # Opcional: reemplaza múltiples espacios por uno solo
+                results[key] = value
+            else:
+                results[key] = ""
+        elif mode == 'sum_percent_until_100':
+            # Busca todos los países y sus porcentajes después de la clave
+            bloque = ""
+            bloque_match = re.search(re.escape(key) + r'(.*)', text, re.DOTALL | re.IGNORECASE)
+            if bloque_match:
+                bloque = bloque_match.group(1)
+            else:
+                bloque = text
+            pattern = r'([A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s]+)\s*Percentage of turnover\s*:\s*(\d+)%'
+            matches = re.findall(pattern, bloque, re.IGNORECASE)
+            suma = 0
+            resultado = []
+            for pais, porcentaje in matches:
+                porcentaje = int(porcentaje)
+                suma += porcentaje
+                resultado.append(f"{pais.strip()}: {porcentaje}%")
+                if suma >= 100:
+                    break
+            results[key] = resultado
     return results
 
-def save_to_excel(data, output_path):
+def save_to_excel(data, output_path, config=None):
     wb = Workbook()
     ws = wb.active
 
@@ -50,14 +75,26 @@ def save_to_excel(data, output_path):
     ws['C1'] = "Mi Empresa S.A."
 
     # --- Tus datos dinámicos ---
-    row = 3  # Empieza en la fila 3 para dejar espacio a los valores estáticos
+    row = 3  # Por si quieres seguir mostrando todo en filas
     for key, value in data.items():
-        ws.cell(row=row, column=1, value=key)
-        if isinstance(value, list):
-            ws.cell(row=row, column=2, value=" - ".join(value))
+        # Si tienes config y la clave tiene definida una celda, úsala
+        cell = None
+        if config and key in config['keywords'] and 'cells' in config['keywords'][key]:
+            cell = config['keywords'][key]['cells'][0]
+        if cell:
+            # Une la lista en una sola celda si es necesario
+            if isinstance(value, list):
+                ws[cell] = " - ".join(value)
+            else:
+                ws[cell] = value
         else:
-            ws.cell(row=row, column=2, value=value)
-        row += 1
+            # Fallback: sigue escribiendo en filas si no hay celda definida
+            ws.cell(row=row, column=1, value=key)
+            if isinstance(value, list):
+                ws.cell(row=row, column=2, value=" - ".join(value))
+            else:
+                ws.cell(row=row, column=2, value=value)
+            row += 1
 
     wb.save(output_path)
 
@@ -75,7 +112,7 @@ def main():
         full_text = "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
         config = load_config(config_path)
         extracted = extract_data(full_text, config)
-        save_to_excel(extracted, output_path)
+        save_to_excel(extracted, output_path, config)
     except Exception as e:
         error_path = output_path.replace('.xlsx', '.error.json')
         with open(error_path, 'w', encoding='utf-8') as f:

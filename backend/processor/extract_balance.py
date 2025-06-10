@@ -9,10 +9,11 @@ def load_config(config_path):
         return json.load(f)
 
 def clean_number(text):
-    text = text.replace('.', '').replace(',', '.')
-    if re.match(r"^\(\d+\.\d+\)$", text.strip()):
-        return '-' + text.strip()[1:-1]
-    return text.strip()
+    text = text.strip()
+    # Si está entre paréntesis, es negativo
+    if text.startswith('(') and text.endswith(')'):
+        return '-' + text[1:-1].replace(' ', '')
+    return text.replace(' ', '')
 
 def extract_data(text, config):
     results = {}
@@ -22,12 +23,22 @@ def extract_data(text, config):
         found = False
         for variant in variants:
             if mode == 'two_numbers_after':
-                match = re.search(
-                    re.escape(variant) + r'[^0-9\-]+([\(]?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})[\)]?)\D+([\(]?\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})[\)]?)',
-                    text
+                # Busca la palabra clave, luego ignora cualquier "Nota X" (donde X es 1-25), luego busca dos números grandes
+                pattern = (
+                    r'\b' + re.escape(variant) + r'\b'
+                    r'(?:[^\d\(\-]+)?'
+                    r'(?:Nota\s{0,3}\d{1,2}[^\d\(\-]+)*'
+                    r'(?:\s+)?'
+                    r'(\(?-?\d{1,3}(?:[.,]\d{3})*\)?)'
+                    r'(?:\s+|\s*\S+\s+)?'
+                    r'(\(?-?\d{1,3}(?:[.,]\d{3})*\)?)?'
                 )
+                match = re.search(pattern, text, re.IGNORECASE)
                 if match:
-                    results[key] = [clean_number(match.group(1)), clean_number(match.group(2))]
+                    results[key] = [
+                        clean_number(match.group(1)) if match.group(1) else "",
+                        clean_number(match.group(2)) if match.group(2) else ""
+                    ]
                     found = True
                     break
             elif mode == 'until_dot':
