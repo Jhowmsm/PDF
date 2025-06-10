@@ -1,6 +1,7 @@
 {
   "keywords": {
-    "TOTAL ACTIVO": {
+    "Total activo": {
+      "variants": ["(A+B)", "Total activo", "TOTAL ACTIVO"],
       "cells": ["B57", "B64"],
       "mode": "two_numbers_after"
     },
@@ -40,9 +41,23 @@
     }
   },
   "static_values": {
-    "A1": "Reporte generado",
-    "A2": "2025-06-09",
-    "C2": "Mi Empresa S.A."
+    "A54": "Auditor",
+    "A55": "Valoracion del auditor",
+    "A56": "Años de referencia de las cuentas",
+    "A57": "Total Activo año de referencia",
+    "A58": "Patrimonio neto año de referencia",
+    "A59": "Resultado del Ejercicio año de referencia",
+    "A60": "Importe neto de la cifra de negocios año de referencia",
+    "A61": "Ventas(Sales) año de referencia",
+    "A62": "Ventas (Revenue) año de referencia",
+    "A63": "Fondos Propios año de referencia",
+    "A64": "Total Activo año anterior",
+    "A65": "Patrimonio neto año anterior",
+    "A66": "Resultado del Ejercicio año anterior",
+    "A67": "Importe neto de la cifra de negocios año anterior",
+    "A68": "Ventas(Sales) año anterior",
+    "A69": "Ventas (Revenue) año anterior",
+    "A70": "Fondos Propios año anterior"
   }
 
 }
